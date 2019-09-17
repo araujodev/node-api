@@ -35,10 +35,22 @@ module.exports = {
     },
 
     async show(req, res){
-
+        try{
+            const { id } = req.params;
+            const userRecovered = await UserService.buscar(id);
+            return res.json(userRecovered);
+        }catch(error){
+            return res.json({ error });
+        }
     },
 
     async destroy(req, res){
-
+        try{
+            const { id } = req.params;
+            const userDes = await UserService.remover(id);
+            return res.json(userDes);
+        }catch(error){
+            return res.json({ error });
+        }
     }
 };

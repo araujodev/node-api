@@ -2,31 +2,34 @@ const { User } = require('../models');
 
 module.exports = {
 
-    listar()
+    async listar()
     {
-        return User.findAll().then(userList => {
-            return userList
-        }).catch(error => {
-            throw error
-        })
+        try{
+            const userList = await User.findAll();
+            return userList;
+        }catch(er){
+            throw er;
+        }
     },
 
-    criar(user)
+    async criar(user)
     {
-        return user.save().then(createdUser => {
-            return createdUser
-        }).catch(error => {
-            throw error
-        });
+        try{
+            const userSaved = await user.save();
+            return userSaved;
+        }catch(er){
+            throw er;
+        }
     },
 
-    buscar(id)
+    async buscar(id)
     {
-        return User.findByPk(id).then(recoveredUser => {
-            return recoveredUser
-        }).catch(error => {
-            throw error
-        })
+        try{
+            const userRecovered = await User.findByPk(id);
+            return userRecovered;
+        }catch(er){
+            throw er;
+        }
     },
 
     async atualizar(user, id){
@@ -37,6 +40,16 @@ module.exports = {
         }catch(er){
             throw er;
         }
+    },
+
+    async remover(id){
+        try{
+            const userR = await this.buscar(id);
+            const destroyed = await userR.destroy();
+            return destroyed;
+        }catch(er){
+            throw er;
+        } 
     }
 
 }
