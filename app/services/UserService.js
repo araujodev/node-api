@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const BcryptImple = require('../../utils/BcryptImple');
 
 module.exports = {
 
@@ -15,6 +16,7 @@ module.exports = {
     async criar(user)
     {
         try{
+            user.password = await BcryptImple.toHash(user.password);
             const userSaved = await user.save();
             return userSaved;
         }catch(er){
@@ -35,8 +37,13 @@ module.exports = {
     async atualizar(user, id){
         try{
             const userR = await this.buscar(id);
-            const updated = await userR.update(user);
-            return updated;
+            if(user.hasOwnProperty('password')){
+                const check = await BcryptImple.checkPassword(user.password, userR.password);
+                if(!check){
+                    user.password = await BcryptImple.toHash(user.password);
+                }
+            }
+            return await userR.update(user);
         }catch(er){
             throw er;
         }
